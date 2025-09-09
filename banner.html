@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Sports Technology | Multiview & Highlight Generation</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        text-decoration: none;
+    }
+
+    body {
+        background: linear-gradient(135deg, #0a192f 0%, #163a2e 100%);
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        overflow-x: hidden;
+        
+        
+    }
+    
+    .container {
+        max-width: 1800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Navigation */
+    nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 0;
+        margin-bottom: 30px;
+        height: 90px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .logo {
+        width: 220px;
+        margin-left: 100px;
+    }
+
+    .logo img {
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 30px;
+    }
+
+    .nav-links a {
+        color: #ddd;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+        color: #4CAF50;
+    }
+
+    /* Main Banner */
+    .banner {
+        display: flex;
+        gap: 20px;
+        height: 600px;
+        margin-bottom: 40px;
+    }
+
+    .panel {
+        flex: 1;
+        border-radius: 15px;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s;
+    }
+
+    .panel:hover {
+        transform: translateY(-5px);
+    }
+
+    .panel-content {
+        padding: 40px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: relative;
+        z-index: 2;
+    }
+
+    .panel-left {
+        background: linear-gradient(to right, rgba(15, 32, 55, 0.9), rgba(15, 32, 55, 0.7)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23155e75"/><path d="M0 0L100 100" stroke="%2300b894" stroke-width="2"/><path d="M100 0L0 100" stroke="%2300b894" stroke-width="2"/></svg>');
+        background-size: cover;
+    }
+
+    .panel-right {
+        background: linear-gradient(to right, rgba(22, 58, 46, 0.8), rgba(22, 58, 46, 0.6)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23155e75"/><circle cx="50" cy="50" r="40" stroke="%234CAF50" stroke-width="2" fill="none"/></svg>');
+        background-size: cover;
+    }
+
+    .panel-right2 {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-magma {
+        background: linear-gradient(to right, #ff7e5f, #feb47b);
+        color: white;
+    }
+    .btn-analytics {
+        background: linear-gradient(to right, #614385, #516395);
+        color: white;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 7px 20px rgba(46, 204, 113, 0.4);
+    }
+
+    .panel-right2::before {
+        content: "";
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(0,255,180,0.15) 10%, transparent 70%);
+        animation: glowMove 6s linear infinite;
+    }
+    
+    @keyframes glowMove {
+        0% { transform: translate(0, 0); }
+        50% { transform: translate(25%, 25%); }
+        100% { transform: translate(0, 0); }
+    }
+        
+
+    .panel h2 {
+        font-size: 32px;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .features {
+        display: flex;
+        gap: 15px;
+        margin: 25px 0;
+    }
+
+    .feature {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px;
+        border-radius: 10px;
+        text-align: center;
+        backdrop-filter: blur(5px);
+        flex: 1;
+    }
+
+    .feature i {
+        font-size: 24px;
+        color: #4CAF50;
+        margin-bottom: 8px;
+    }
+
+    .btn {
+        padding: 14px 30px;
+        border-radius: 50px;
+        border: none;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s;
+        align-self: flex-start;
+        margin-top: 15px;
+    }
+
+    .btn-left {
+        background: linear-gradient(to right, #00b894, #4CAF50);
+        color: white;
+    }
+
+    .btn-right {
+        background: linear-gradient(to right, #0984e3, #00b894);
+        color: white;
+    }
+    .btn-right2 {
+        background: linear-gradient(to right, #ff7e5f, #feb47b);
+        color: white;
+    }
+
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .interface-mockup {
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+        display: flex;
+        gap: 10px;
+    }
+
+    .screen {
+        width: 60px;
+        height: 40px;
+        background: #2c3e50;
+        border-radius: 5px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .screen::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, rgba(0, 184, 148, 0.3), rgba(9, 132, 227, 0.3));
+    }
+
+    .timeline {
+        height: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        margin: 15px 0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .timeline::after {
+        content: '';
+        position: absolute;
+        height: 100%;
+        width: 30%;
+        background: #4CAF50;
+        border-radius: 10px;
+    }
+
+    .controls {
+        display: flex;
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .control {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #4CAF50;
+    }
+
+    
+    /* Responsive Design */
+    @media (max-width: 992px) {
+        .banner {
+            flex-direction: column;
+            height: auto;
+        }
+
+        .panel {
+            min-height: 400px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .features {
+            flex-direction: column;
+        }
+
+        .nav-links {
+            display: none;
+        }
+
+        .panel-content {
+            padding: 20px;
+        }
+
+        .panel h2 {
+            font-size: 24px;
+        }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <!-- Navigation -->
+    <nav>
+        <div class="logo">
+            <img src="./images/image.png" alt="">
+            <span></span>
+        </div>
+        
+    </nav>
+    
+    <!-- Main Banner -->
+    <div class="banner">
+        <!-- multi view -->
+        <div class="panel panel-left">
+            <div class="panel-content">
+                <h2>MULTIVIEW CRICKET EXPERIENCE</h2>
+                <p>Revolutionary multi-angle viewing technology for an immersive cricket experience. Switch between cameras in real-time.</p>
+                
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-video"></i>
+                        <div>4+ Camera Angles</div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-desktop"></i>
+                        <div>Live Commentary</div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-broadcast-tower"></i>
+                        <div>Live Switching</div>
+                    </div>
+                </div>
+                
+                <a class="btn btn-left" href="http://match.apisaranyu.in"  >EXPLORE MULTIVIEW</a>
+                
+                <div class="interface-mockup">
+                    <div class="screen"></div>
+                    <div class="screen"></div>
+                    <div class="screen"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Highlithts -->
+        <div class="panel panel-right">
+            <div class="panel-content">
+                <h2>SMART HIGHLIGHT GENERATION</h2>
+                <p>AI-powered highlight detection that automatically identifies and compiles key moments from matches.</p>
+                
+                <!-- <div class="timeline"></div>
+                
+                <div class="controls">
+                    <div class="control">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="control">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <div class="control">
+                        <i class="fas fa-share"></i>
+                    </div>
+                </div> -->
+
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-video"></i>
+                        <div>AI-Driven Instent Highlights</div>
+                    </div>
+                    <div class="feature">
+                            <i class="fas fa-robot"></i>
+                            <div>AI-Driven Instant Highlights</div>
+                    </div>
+                    <!-- <div class="feature">
+                        <i class="fas fa-desktop"></i>
+                        <div>Live Commentary</div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-broadcast-tower"></i>
+                        <div>Live Switching</div>
+                    </div> -->
+                </div>
+                
+                <a class="btn btn-right" href="http://highlights.apisaranyu.in/">VIEW HIGHLIGHTS</a>
+                
+                <div class="interface-mockup">
+                    <i class="fas fa-brain" style="color: #4CAF50; font-size: 32px;"></i>
+                    <div>
+                        <div>AI Detection</div>
+                        <div style="font-size: 12px;">Key Moments Identified</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vidify -->
+        <div class="panel panel-right2">
+            <div class="panel-content">
+                <h2>Vidify - AI Video Creation Platform</h2>
+                <p>AI-powered video production with automated editing, multilingual voiceovers, and smart media sourcing for advertising, marketing, news, education, and more.</p>
+                
+
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-robot"></i>
+                        <div>AI-powered video production with automated editing</div>
+                    </div>
+                    <div class="feature">
+                        <i class="fa-solid fa-play"></i>
+                        <div>Multilingual voiceovers</div>
+                    </div>
+
+                </div>
+
+
+                
+                <!-- <div class="timeline"></div>
+                
+                <div class="controls">
+                    <div class="control">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="control">
+                        <i class="fas fa-cut"></i>
+                    </div>
+                    <div class="control">
+                        <i class="fas fa-share"></i>
+                    </div>
+                </div> -->
+                
+                
+                <a class="btn btn-right2" href="http://vidify.apisaranyu.in">VIEW Vidify</a>
+                
+                <div class="interface-mockup">
+                    <i class="fas fa-brain" style="color: #4CAF50; font-size: 32px;"></i>
+                    <div>
+                        <div>AI Creation</div>
+                        <div style="font-size: 12px;">AI-Powered video</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="banner">
+        <!-- Magma Panel -->
+        <div class="panel" style="background: linear-gradient(to right, rgba(86, 20, 45, 0.8), rgba(86, 20, 45, 0.6));">
+            <div class="panel-content">
+                <h2>MAGMA</h2>
+                <p>Multi-language transcription service that converts cricket commentary and audio into text in multiple languages.</p>
+
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-language"></i>
+                        <div>Multi-language Support</div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-microphone"></i>
+                        <div>Real-time Transcription</div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-globe"></i>
+                        <div>Global Accessibility</div>
+                    </div>
+                </div>
+
+                <a class="btn btn-magma" href="http://magma.apisaranyu.in:8080/magma/#/">EXPLORE MAGMA</a>
+
+                <div class="interface-mockup">
+                    <i class="fas fa-wave-square" style="font-size: 28px; color: #ff7e5f;"></i>
+                    <div>
+                        <div>Live Transcription</div>
+                        <div style="font-size: 12px;">Multiple Languages</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytics Panel -->
+        <div class="panel" style="background: linear-gradient(to right, rgba(38, 33, 62, 0.8), rgba(38, 33, 62, 0.6));">
+            <div class="panel-content">
+                <h2>ANALYTICS</h2>
+                <p>Comprehensive performance analytics for players and teams with detailed statistics and visualizations.</p>
+
+                <div class="features">
+                    <div class="feature">
+                        <i class="fas fa-chart-line"></i>
+                        <div>Performance Metrics</div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-table"></i>
+                        <div>Detailed Statistics</div>
+                    </div>
+                    <div class="feature">
+                        <i class="fas fa-user-graduate"></i>
+                        <div>Player Development</div>
+                    </div>
+                </div>
+
+                <a class="btn btn-analytics" href="https://demoanalytics.apisaranyu.in">VIEW ANALYTICS</a>
+
+                <div class="interface-mockup">
+                    <i class="fas fa-chart-pie" style="font-size: 28px; color: #9f7aea;"></i>
+                    <div>
+                        <div>Data Insights</div>
+                        <div style="font-size: 12px;">Performance Analysis</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+
+</body>
+</html>
